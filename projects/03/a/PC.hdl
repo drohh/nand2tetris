@@ -16,5 +16,14 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    //This one was annoying. But, the trick is you always increment the feedback, then decide if you want to select that incremented feedback or just go with the "in" wire.
+    Inc16(in=feedback, out=inced);
+    Mux16(a=feedback,b=inced,sel=inc,out=v1);
+
+    Mux16(a=v1,b=in,sel=load,out=v2);
+    Mux16(a=v2,b=false,sel=reset,out=v3);
+
+    //Since you're taking care of the logic behind manipulating the counter above, you can always load that logic's output into the register (ie. the load=true part).
+   //Make sure to have to output wires, 1 for the feedback, and 1 for the actual "out" wire
+    Register(in=v3,load=true,out=out,out=feedback);
 }
